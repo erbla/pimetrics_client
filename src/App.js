@@ -1,22 +1,33 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from 'react';
 
 function App() {
+
+  const[lastping, setLastPing]=useState('');
+
+  useEffect( () => {
+    fetch('/time')
+      .then(response => response.json())
+      .then(data => setLastPing(data.lastping));
+  }, []);
+
+  useEffect( () => {
+    const interval = setInterval(() => {
+      fetch('/time')
+        .then(response => response.json())
+        .then(data => setLastPing(data.lastping));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Last time the Raspberry Pi communicated with the server: {lastping}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
