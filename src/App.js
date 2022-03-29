@@ -43,13 +43,22 @@ const AppBar = (props) => (
 function App() {
 
   const[lastping, setLastPing]=useState('');
+  const[cpu_usage, setCpuUsage]=useState(0);
+  const[ram_usage, setRamUsage]=useState(0);
+  const[disk_usage, setDiskUsage]=useState(0);
   const[showSidebar, setShowSidebar] = useState(false);
 
   useEffect(
     function getMetrics() {
-      fetch('/time')
+      fetch('/update')
         .then(response => response.json())
-        .then(data => setLastPing(data.lastping))
+        .then(data => {
+          //should probably just put allo of these in a dict
+          setLastPing(data.lastping);
+          setCpuUsage(data.cpu_usage);
+          setRamUsage(data.ram_usage);
+          setDiskUsage(data.disk_usage);
+        })
         .catch((error) => console.log("Error contacting server: %s", error));
       setTimeout(getMetrics, 1000);
   }, []);
@@ -71,6 +80,9 @@ function App() {
                 <p>
                   Last time the Raspberry Pi communicated with the server: {lastping}
                 </p>
+                <p>
+                  {cpu_usage} {ram_usage} {disk_usage}
+                </p>
               </Box>
               {(!showSidebar || size !== 'small') ? (
                 <Collapsible direction="horizontal" open={showSidebar}>
@@ -84,7 +96,7 @@ function App() {
                       Sidebar stuff
                   </Box>
                 </Collapsible>
-              ) : (
+                ) : (
                 <Layer>
                   <Box
                     background='light-2'
