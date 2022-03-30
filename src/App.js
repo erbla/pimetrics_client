@@ -4,13 +4,15 @@ import {
   Box,
   Button,
   Collapsible,
-  Heading,
   Grommet,
+  Heading,
   Layer,
   Notification,
   ResponsiveContext,
+  Text
 } from 'grommet';
 import { FormClose} from 'grommet-icons';
+import { Labelled } from './components/meter_value';
 
 const theme = {
   global: {
@@ -21,6 +23,7 @@ const theme = {
     },
     colors: {
          brand: '#228BE6',
+         'accent-1': '#f27538',
     },
   },
 };
@@ -77,12 +80,14 @@ function App() {
             </AppBar>
             < Box direction='row' flex overflow={{ horizontal: 'hidden'}}>
               <Box flex align='center' justify='center'>
-                <p>
+                <Box flex direction='row' >
+                  <Labelled theme={theme} value={cpu_usage}  size='medium' title="CPU usage"/>
+                  <Labelled theme={theme} value={ram_usage}  size='medium' title="RAM usage"/>
+                  <Labelled theme={theme} value={disk_usage}  size='medium' title="Disk usage"/>
+                </Box>
+                <Text size='xlarge'>
                   Last time the Raspberry Pi communicated with the server: {lastping}
-                </p>
-                <p>
-                  {cpu_usage} {ram_usage} {disk_usage}
-                </p>
+                </Text>
               </Box>
               {(!showSidebar || size !== 'small') ? (
                 <Collapsible direction="horizontal" open={showSidebar}>
